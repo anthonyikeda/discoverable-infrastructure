@@ -1,0 +1,59 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$script = <<SCRIPT
+echo "Installing vault dependencies ..."
+
+sudo apt-get update
+sudo apt-get install -y unzip curl jq
+
+if [ -z "$VAULT_VERSION" ]; then
+    VAULT_VERSION="0.7.0"
+fi
+
+echo "Fetching Vault version ${VAULT_VERSION} ..."
+cd /tmp/
+
+curl -s https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip -o vault.zip
+echo "Installing Vault version ${VAULT_VERSION} ..."
+
+unzip vault.zip
+sudo chmod +x vault
+sudo mv vault /usr/bin/vault
+sudo mkdir /etc/vault.d
+sudo chmod a+w /etc/vault.d
+
+sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
+
+SCRIPT
+
+VAULT_VERSION = ENV['VAULT_VERSION']
+
+VAGRANTFILE_API_VERSION = "2"
+
+DEMO_BOX_NAME = ENV['DEMO_BOX_NAME'] || "debian/jessie64"
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://atlas.hashicorp.com/search.
+  config.vm.box = DEMO_BOX_NAME
+  config.vm.provision "shell",
+    inline: $script,
+    env: {'VAULT_VERSION' => VAULT_VERSION }
+
+  config.vm.provision "file", source: './config/vault.hcl', destination: '/etc/vault.d/vault.hcl'
+
+  config.vm.define "vault1" do |v1|
+    v1.vm.hostname = "vault1"
+    v1.vm.network "private_network", ip: "172.20.20.12"
+    v1.vm.network :forwarded_port, guest: 8200, host: 8200
+  end
+end

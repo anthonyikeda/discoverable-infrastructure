@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/Users/anthonyikeda/work/git_devops/infrastructure/consul","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

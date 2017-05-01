@@ -1,0 +1,12 @@
+{
+  "server" : true,
+  "datacenter" : "west-aws",
+  "data_dir" : "/tmp/consul",
+  "log_level" : "INFO",
+  "bind_addr" : "172.20.20.10",
+  "addresses" : {
+    "http" : "0.0.0.0"
+  },
+  "retry_join" : [ "172.20.20.11" ],
+  "node_name" : "masterone"
+}
