@@ -1,6 +1,8 @@
 consul {
   address = "172.20.20.11:8500"
   client_service_name = "nomad-client"
+  server_service_name = "nomad-server-1"
+  checks_use_advertise = true
 }
 
 client {

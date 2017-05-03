@@ -38,6 +38,7 @@ Vagrant.configure(2) do |config|
 
     n1.vm.network "private_network", ip: "172.20.20.15"
     n1.vm.network :forwarded_port, guest: 4646, host: 4646
+    # n1.vm.provision "shell", inline: "nohup nomad agent -config=/etc/nomad.d/config.hcl > /tmp/nomad1.log"
   end
 
   config.vm.define "nomad2" do |n2|
@@ -47,6 +48,7 @@ Vagrant.configure(2) do |config|
 
     n2.vm.network "private_network", ip: "172.20.20.16"
     n2.vm.network :forwarded_port, guest: 4656, host: 4656
+    # n2.vm.provision "shell", inline: "nohup nomad agent -config=/etc/nomad.d/config.hcl > /tmp/nomad2.log"
   end
 
   config.vm.define "nomad3" do |n3|
@@ -57,16 +59,7 @@ Vagrant.configure(2) do |config|
 
     n3.vm.network "private_network", ip: "172.20.20.17"
     n3.vm.network :forwarded_port, guest: 4666, host: 4666
-  end
-
-  config.vm.define "nomad4" do |n4|
-    n4.vm.hostname = "nomad4"
-    n4.vm.provision "docker" # Just install it
-
-    n4.vm.provision "file", source: './config/nomad4.hcl', destination: '/etc/nomad.d/config.hcl'
-
-    n4.vm.network "private_network", ip: "172.20.20.18"
-    n4.vm.network :forwarded_port, guest: 4676, host: 4676
+    # n3.vm.provision "shell", inline: "nohup nomad agent -config=/etc/nomad.d/config.hcl > /tmp/nomad3.log"
   end
 
   # Increase memory for Parallels Desktop

@@ -1,6 +1,8 @@
 consul {
   address = "172.20.20.11:8500"
   client_service_name = "nomad-client"
+  server_service_name = "nomad-server-1"
+  checks_use_advertise = true
 }
 
 client {
@@ -13,11 +15,11 @@ advertise {
   serf = "172.20.20.17"
 }
 
-addresses {
-  http = "172.20.20.17"
-  rpc  = "172.20.20.17"
-  serf = "172.20.20.17"
-}
+#addresses {
+#  http = "172.20.20.17"
+#  rpc  = "172.20.20.17"
+#  serf = "172.20.20.17"
+#}
 
 bind_addr = "0.0.0.0"
 data_dir = "/tmp/nomad"

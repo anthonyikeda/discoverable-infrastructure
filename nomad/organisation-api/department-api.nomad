@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job.html
 #
-job "organisation-api" {
+job "department-api" {
   # The "region" parameter specifies the region in which to execute the job. If
   # omitted, this inherits the default region name of "global".
   # region = "global"
@@ -138,23 +138,23 @@ job "organisation-api" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task.html
     #
-    task "organisation-api" {
+    task "department-api" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "docker"
 
       env {
         SPRING_ACTIVE_PROFILES = "vagrant"
-        SERVER_PORT = "8080"
+        SERVER_PORT = "8082"
         SPRING_CLOUD_CONSUL_HOST = "172.20.20.10"
         SPRING_CLOUD_VAULT_HOST = "172.20.20.12"
         SPRING_CLOUD_VAULT_SCHEME = "http"
         SPRING_CLOUD_VAULT_AUTHENTICATION = "approle"
         SPRING_CLOUD_VAULT_AUTHENTICATION = "APPROLE"
-        SPRING_CLOUD_VAULT_APP_ROLE_ROLE_ID = "de701d4a-25de-914a-4a33-7075d482e8d8"
-        SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID = "fef75c2e-1b69-1b6f-43f6-4ce4e0e0358a"
+        SPRING_CLOUD_VAULT_APP_ROLE_ROLE_ID = "f44d4a62-bd97-ef26-20b4-b3e8f43205e8"
+        SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID = "4feacd05-0937-d47b-7319-907e7587ce4d"
         SPRING_CLOUD_VAULT_MYSQL_ENABLED = "true"
-        SPRING_DATASOURCE_URL = "jdbc:mysql://192.168.99.100:13306/organisation_db"
+        SPRING_DATASOURCE_URL = "jdbc:mysql://192.168.99.100:13306/department_db"
         SECURITY_OAUTH2_RESOURCE_USER_INFO_URI = "http://10.0.2.15:20016/user"
         SECURITY_OAUTH2_RESOURCE_TOKEN_INFO_URI = "http://10.0.2.15:20016/oauth/check_token"
         AUTH_SERVER_URL = "http://10.0.2.15:20016/oauth/check_token"
@@ -166,11 +166,11 @@ job "organisation-api" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "anthonyikeda/organisation-api:1.0.0"
+        image = "anthonyikeda/department-api:1.0.0"
         port_map {
-          http = 8080
+          http = 8082
         }
-        # network_mode = "host"
+        network_mode = "host"
       }
 
       # The "artifact" stanza instructs Nomad to download an artifact from a

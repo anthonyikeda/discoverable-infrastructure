@@ -8,5 +8,8 @@
     "http" : "0.0.0.0"
   },
   "retry_join" : [ "172.20.20.11" ],
-  "node_name" : "masterone"
+  "node_name" : "masterone",
+  "http_api_response_headers": {
+        "Access-Control-Allow-Origin": "*"
+  }
 }
