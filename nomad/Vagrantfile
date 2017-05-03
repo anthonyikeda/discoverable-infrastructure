@@ -1,0 +1,88 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$script = <<SCRIPT
+# Update apt and get dependencies
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y unzip curl wget vim
+
+# Download Nomad
+NOMAD_VERSION=0.5.6
+echo Fetching Nomad...
+cd /tmp/
+curl -sSL https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip -o nomad.zip
+
+echo Installing Nomad...
+unzip nomad.zip
+sudo chmod +x nomad
+sudo mv nomad /usr/bin/nomad
+
+sudo mkdir -p /etc/nomad.d
+sudo chmod a+w /etc/nomad.d
+
+# Set hostname's IP to made advertisement Just Work
+sudo sed -i -e "s/.*nomad.*/$(ip route get 1 | awk '{print $NF;exit}') nomad/" /etc/hosts
+
+SCRIPT
+
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/xenial64" # 16.04 LTS
+  config.vm.hostname = "nomad"
+  config.vm.provision "shell", inline: $script, privileged: false
+
+  config.vm.define "nomad1" do |n1|
+    n1.vm.hostname = "nomad1"
+
+    n1.vm.provision "file", source: './config/nomad1.hcl', destination: '/etc/nomad.d/config.hcl'
+
+    n1.vm.network "private_network", ip: "172.20.20.15"
+    n1.vm.network :forwarded_port, guest: 4646, host: 4646
+  end
+
+  config.vm.define "nomad2" do |n2|
+    n2.vm.hostname = "nomad2"
+    n2.vm.provision "docker" # Just install it
+    n2.vm.provision "file", source: './config/nomad2.hcl', destination: '/etc/nomad.d/config.hcl'
+
+    n2.vm.network "private_network", ip: "172.20.20.16"
+    n2.vm.network :forwarded_port, guest: 4656, host: 4656
+  end
+
+  config.vm.define "nomad3" do |n3|
+    n3.vm.hostname = "nomad3"
+    n3.vm.provision "docker" # Just install it
+
+    n3.vm.provision "file", source: './config/nomad3.hcl', destination: '/etc/nomad.d/config.hcl'
+
+    n3.vm.network "private_network", ip: "172.20.20.17"
+    n3.vm.network :forwarded_port, guest: 4666, host: 4666
+  end
+
+  config.vm.define "nomad4" do |n4|
+    n4.vm.hostname = "nomad4"
+    n4.vm.provision "docker" # Just install it
+
+    n4.vm.provision "file", source: './config/nomad4.hcl', destination: '/etc/nomad.d/config.hcl'
+
+    n4.vm.network "private_network", ip: "172.20.20.18"
+    n4.vm.network :forwarded_port, guest: 4676, host: 4676
+  end
+
+  # Increase memory for Parallels Desktop
+  config.vm.provider "parallels" do |p, o|
+    p.memory = "1024"
+  end
+
+  # Increase memory for Virtualbox
+  config.vm.provider "virtualbox" do |vb|
+        vb.memory = "1024"
+  end
+
+  # Increase memory for VMware
+  ["vmware_fusion", "vmware_workstation"].each do |p|
+    config.vm.provider p do |v|
+      v.vmx["memsize"] = "1024"
+    end
+  end
+end

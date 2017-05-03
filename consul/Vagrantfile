@@ -33,7 +33,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = DEMO_BOX_NAME
-
+  config.vm.network "public_network"
   config.vm.provision "shell",
                           inline: $script,
                           env: {'CONSUL_DEMO_VERSION' => CONSUL_DEMO_VERSION}
