@@ -1,0 +1,15 @@
+{
+  "server" : true,
+  "ui" : true,
+  "datacenter" : "west-aws",
+  "data_dir" : "/data/consul",
+  "log_level" : "INFO",
+  "disable_host_node_id": true,
+  "addresses" : {
+    "http" : "0.0.0.0"
+  },
+  "node_name" : "masterone",
+  "http_api_response_headers": {
+        "Access-Control-Allow-Origin": "*"
+  }
+}

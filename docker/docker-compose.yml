@@ -1,0 +1,41 @@
+version: "3.2"
+services:
+  consul1:
+    image: consul:0.8.1
+    container_name: "consul1"
+    volumes:
+      - ./server1:/config
+      - ./data:/data/consul
+    ports:
+      - 8500:8500
+      - 8400:8400
+      - 8600:8600
+    command: "agent -bootstrap -config-dir=/config"
+    external_links:
+      - consul2
+  consul2:
+    image: consul:0.8.1
+    container_name: "consul2"
+    volumes:
+      - ./server2:/config
+    command: "agent -config-dir=/config -node-id=adf4238a-882b-9ddc-4a9d-5b6758e4159e"
+    depends_on:
+      - consul1
+    external_links:
+      - consul1
+  vault:
+    image: vault:0.7.0
+    container_name: vault1
+    hostname: vault1
+    volumes:
+      - ./vault_config:/config
+    ports:
+      - 8200:8200
+    command: "server -config=/config/config.hcl"
+    depends_on:
+      - consul1
+
+networks:
+  default:
+    external:
+      name: cloud-dev
