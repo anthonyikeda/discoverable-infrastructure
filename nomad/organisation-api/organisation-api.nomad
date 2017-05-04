@@ -152,13 +152,14 @@ job "organisation-api" {
         SPRING_CLOUD_VAULT_AUTHENTICATION = "approle"
         SPRING_CLOUD_VAULT_AUTHENTICATION = "APPROLE"
         SPRING_CLOUD_VAULT_APP_ROLE_ROLE_ID = "de701d4a-25de-914a-4a33-7075d482e8d8"
-        SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID = "fef75c2e-1b69-1b6f-43f6-4ce4e0e0358a"
+        SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID = "f49b100a-6535-8dd3-eb7b-0b3bf37cadd7"
+
         SPRING_CLOUD_VAULT_MYSQL_ENABLED = "true"
         SPRING_DATASOURCE_URL = "jdbc:mysql://192.168.99.100:13306/organisation_db"
         SECURITY_OAUTH2_RESOURCE_USER_INFO_URI = "http://10.0.2.15:20016/user"
         SECURITY_OAUTH2_RESOURCE_TOKEN_INFO_URI = "http://10.0.2.15:20016/oauth/check_token"
         AUTH_SERVER_URL = "http://10.0.2.15:20016/oauth/check_token"
-        SPRING_CLOUD_CONSUL_DISCOVERY_IP_ADDRESS = "$NOMAD_IP_http"
+        SPRING_CLOUD_CONSUL_DISCOVERY_IP_ADDRESS = "${NOMAD_IP_http}"
         SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS = "true"
       }
       # The "config" stanza specifies the driver configuration, which is passed
@@ -166,7 +167,7 @@ job "organisation-api" {
       # are specific to each driver, so please see specific driver
       # documentation for more information.
       config {
-        image = "anthonyikeda/organisation-api:1.0.0"
+        image = "anthonyikeda/organisation-api:1.0.3"
         port_map {
           http = 8080
         }
