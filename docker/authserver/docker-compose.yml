@@ -1,0 +1,26 @@
+version: "3.2"
+services:
+  authserver:
+    image: anthonyikeda/authserver
+    environment:
+      - SPRING_SECURITY_PASSWORD=vagrant
+      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.99.100:13306/auth_db
+      - SPRING_CLOUD_VAULT_HOST=vault1
+      - SPRING_CLOUD_VAULT_SCHEME=http
+      - SPRING_CLOUD_VAULT_AUTHENTICATION=approle
+      - SPRING_CLOUD_VAULT_APP_ROLE_ROLE_ID=62005f87-abe7-f5d6-e3b0-e99bb5334722
+      - SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID=01cca4d3-da13-d771-b50d-513c739580bd
+      - SPRING_CLOUD_VAULT_MYSQL_ENABLED=true
+      - SPRING_CLOUD_VAULT_MYSQL_ROLE=cloud-auth
+      - SPRING_CLOUD_VAULT_MYSQL_BACKEND=mysql
+      - SPRING_CLOUD_VAULT_MYSQL_USERNAME_PROPERTY=spring.datasource.username
+      - SPRING_CLOUD_VAULT_MYSQL_PASSWORD_PROPERTY=spring.datasource.password
+      - SECURITY_OAUTH2_CLIENT_CLIENT_ID=sample
+      - SECURITY_OAUTH2_CLIENT_CLIENT_SECRET=password
+    external_links:
+      - vault
+
+networks:
+  default:
+    external:
+      name: cloud-dev

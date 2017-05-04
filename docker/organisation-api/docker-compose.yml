@@ -1,0 +1,30 @@
+version: "3.2"
+services:
+  orgaisationapi:
+    image: anthonyikeda/organisation-api:1.0.3
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_ACTIVE_PROFILES=vagrant
+      - SERVER_PORT=8080
+      - SPRING_CLOUD_CONSUL_HOST=consul1
+      - SPRING_CLOUD_VAULT_HOST=vault1
+      - SPRING_CLOUD_VAULT_SCHEME=http
+      - SPRING_CLOUD_VAULT_AUTHENTICATION=APPROLE
+      - SPRING_CLOUD_VAULT_APP_ROLE_ROLE_ID=f87b9717-9956-11f3-9487-2e3a5b1c875d
+      - SPRING_CLOUD_VAULT_APP_ROLE_SECRET_ID=1c64e946-f181-e8f3-3285-6df2b951abcb
+      - SPRING_CLOUD_VAULT_MYSQL_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.99.100:13306/organisation_db
+      - SECURITY_OAUTH2_RESOURCE_USER_INFO_URI=http://authserver:9090/user
+      - SECURITY_OAUTH2_RESOURCE_TOKEN_INFO_URI=http://authserver:9090/oauth/check_token
+      - AUTH_SERVER_URL=http://authserver:9090/oauth/check_token
+      - SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS=true
+    external_links:
+      - consul1
+      - vault
+      - authserver
+
+networks:
+  default:
+    external:
+      name: cloud-dev
