@@ -1,0 +1,21 @@
+version: "3.2"
+services:
+  companymanager:
+    image: anthonyikeda/company-manager:1.0.0
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul1
+      - AUTH_SERVER_URL=http://authserver:9090/oauth/check_token
+      - SECURITY_OAUTH2_RESOURCE_USER_INFO_URI=http://authserver:9090/user
+      - SECURITY_OAUTH2_RESOURCE_TOKEN_INFO_URI=http://authserver:9090/oauth/check_token
+    external_links:
+      - consul
+      - employee-api
+      - organisation-api
+      - authserver
+
+networks:
+  default:
+    external:
+      name: cloud-dev

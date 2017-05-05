@@ -7,6 +7,8 @@ services:
       - ./server1:/config
       - ./data:/data/consul
     ports:
+      - 8301:8301
+      - 8300:8300
       - 8500:8500
       - 8400:8400
       - 8600:8600
