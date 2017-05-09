@@ -1,5 +1,7 @@
 {
   "server" : true,
+  "ui" : true,
+  "bootstrap" : true,
   "datacenter" : "west-aws",
   "data_dir" : "/tmp/consul",
   "log_level" : "INFO",

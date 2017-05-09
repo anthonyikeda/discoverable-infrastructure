@@ -1,4 +1,5 @@
 {
+  "server" : true,
   "datacenter" : "west-aws",
   "data_dir" : "/tmp/consul",
   "log_level" : "INFO",
@@ -6,6 +7,5 @@
   "addresses" : {
     "http" : "0.0.0.0"
   },
-  "retry_join" : [ "172.20.20.11" ],
   "node_name" : "mastertwo"
 }
