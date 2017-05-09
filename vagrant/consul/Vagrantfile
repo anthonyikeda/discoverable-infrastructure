@@ -33,19 +33,23 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = DEMO_BOX_NAME
-  config.vm.network "public_network"
+  # config.vm.network "public_network", bridge: "en1: Wi-Fi (AirPort)", adapter: "1"
   config.vm.provision "shell",
                           inline: $script,
                           env: {'CONSUL_DEMO_VERSION' => CONSUL_DEMO_VERSION}
 
   config.vm.define "n1" do |n1|
       n1.vm.hostname = "n1"
+      # n1.vm.network "public_network", bridge: "en1: Wi-Fi (AirPort)", adapter: "1", ip: "192.168.x.xx"
       n1.vm.network "private_network", ip: "172.20.20.10"
       n1.vm.network :forwarded_port, guest: 8500, host: 8500
+      n1.vm.provision "file", source: './config/server1/server1.json', destination: '/etc/consul.d/config.json'
   end
 
   config.vm.define "n2" do |n2|
       n2.vm.hostname = "n2"
+      # n2.vm.network "public_network", bridge: "en1: Wi-Fi (AirPort)", adapter: "1", ip: "192.168.x.xx"
       n2.vm.network "private_network", ip: "172.20.20.11"
+      n2.vm.provision "file", source: './config/server2/server2.json', destination: '/etc/consul.d/config.json'
   end
 end
