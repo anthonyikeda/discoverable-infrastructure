@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$script = <<SCRIPT
+# Update apt and get dependencies
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y unzip curl wget vim
+
+# Set hostname's IP to make advertisement Just Work
+sudo sed -i -e "s/.*nomad.*/$(ip route get 1 | awk '{print $NF;exit}') nomad/" /etc/hosts
+
+SCRIPT
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/xenial64" # 16.04 LTS
+  config.vm.hostname = "bare-docker"
+  config.vm.provision "shell", inline: $script, privileged: false
+
+  config.vm.define "docker" do |d1|
+    d1.vm.provision "docker" # Just install it
+    d1.vm.network "private_network", ip: "172.20.20.16"
+    d1.vm.network :forwarded_port, guest: 8080, host: 8080
+  end
+
+end
