@@ -21,6 +21,12 @@ sudo mkdir /etc/consul.d
 sudo chmod a+w /etc/consul.d
 SCRIPT
 
+$fileupdate = <<FUPD
+mv /tmp/consul.service /etc/systemd/system/consul.service
+systemctl enable consul.service
+service consul start
+FUPD
+
 # Specify a Consul version
 CONSUL_DEMO_VERSION = ENV['CONSUL_DEMO_VERSION']
 
@@ -37,6 +43,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell",
                           inline: $script,
                           env: {'CONSUL_DEMO_VERSION' => CONSUL_DEMO_VERSION}
+  config.vm.provision "file", source: './config/server1/consul.service', destination: '/tmp/consul.service'
 
   config.vm.define "n1" do |n1|
       n1.vm.hostname = "n1"
@@ -44,6 +51,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       n1.vm.network "private_network", ip: "172.20.20.10"
       n1.vm.network :forwarded_port, guest: 8500, host: 8500
       n1.vm.provision "file", source: './config/server1/server1.json', destination: '/etc/consul.d/config.json'
+      n1.vm.provision "shell",
+                          inline: $fileupdate
   end
 
   config.vm.define "n2" do |n2|
@@ -51,5 +60,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # n2.vm.network "public_network", bridge: "en1: Wi-Fi (AirPort)", adapter: "1", ip: "192.168.x.xx"
       n2.vm.network "private_network", ip: "172.20.20.11"
       n2.vm.provision "file", source: './config/server2/server2.json', destination: '/etc/consul.d/config.json'
+      n2.vm.provision "shell",
+                          inline: $fileupdate
   end
 end
