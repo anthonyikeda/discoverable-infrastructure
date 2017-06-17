@@ -1,8 +1,7 @@
 version: "3.2"
 services:
   consul1:
-    image: consul:0.8.1
-    container_name: "consul1"
+    image: consul:0.8.4
     volumes:
       - ./server1:/config
       - ./data:/data/consul
@@ -16,8 +15,7 @@ services:
     external_links:
       - consul2
   consul2:
-    image: consul:0.8.1
-    container_name: "consul2"
+    image: consul:0.8.4
     volumes:
       - ./server2:/config
     command: "agent -config-dir=/config -node-id=adf4238a-882b-9ddc-4a9d-5b6758e4159e"
@@ -26,8 +24,7 @@ services:
     external_links:
       - consul1
   vault:
-    image: vault:0.7.0
-    container_name: vault1
+    image: vault:0.7.2
     hostname: vault1
     volumes:
       - ./vault_config:/config
