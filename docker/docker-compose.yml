@@ -34,7 +34,7 @@ services:
     depends_on:
       - consul1
 
-#networks:
-#  default:
-#    external:
+networks:
+  big-net:
+    external: true
 #      name: cloud-dev
