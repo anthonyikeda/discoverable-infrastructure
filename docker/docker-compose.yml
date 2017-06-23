@@ -11,14 +11,14 @@ services:
       - 8500:8500
       - 8400:8400
       - 8600:8600
-    command: "agent -bootstrap -config-dir=/config"
+    command: agent -bootstrap -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}'
     external_links:
       - consul2
   consul2:
     image: consul:0.8.4
     volumes:
       - ./server2:/config
-    command: "agent -config-dir=/config -node-id=adf4238a-882b-9ddc-4a9d-5b6758e4159e"
+    command: agent -config-dir=/config -node-id=adf4238a-882b-9ddc-4a9d-5b6758e4159e -bind='{{ GetInterfaceIP "eth0" }}'
     depends_on:
       - consul1
     external_links:
@@ -34,7 +34,7 @@ services:
     depends_on:
       - consul1
 
-networks:
-  default:
-    external:
-      name: cloud-dev
+#networks:
+#  default:
+#    external:
+#      name: cloud-dev
