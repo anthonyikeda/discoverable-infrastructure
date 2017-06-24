@@ -1,24 +1,34 @@
 version: "3.2"
 services:
   consul1:
-    image: consul:0.8.4
+    image: anthonyikeda/consul:0.8.4
     volumes:
       - ./server1:/config
-      - ./data:/data/consul
+      - consul-store:/discovery/data
     ports:
       - 8301:8301
       - 8300:8300
       - 8500:8500
       - 8400:8400
       - 8600:8600
-    command: agent -bootstrap -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}'
+    command: agent -disable-host-node-id -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}' --data-dir=/discovery/data
     external_links:
       - consul2
+      - consul3
   consul2:
     image: consul:0.8.4
     volumes:
       - ./server2:/config
     command: agent -config-dir=/config -node-id=adf4238a-882b-9ddc-4a9d-5b6758e4159e -bind='{{ GetInterfaceIP "eth0" }}'
+    depends_on:
+      - consul1
+    external_links:
+      - consul1
+  consul3:
+    image: consul:0.8.4
+    volumes:
+      - ./server3:/config
+    command: agent -config-dir=/config -node-id=c4b4b5a1-d366-4da2-bd8b-55f8f6341449 -bind='{{ GetInterfaceIP "eth0" }}'
     depends_on:
       - consul1
     external_links:
@@ -34,7 +44,9 @@ services:
     depends_on:
       - consul1
 
+volumes:
+  consul-store:
+    driver: local
 networks:
   big-net:
     external: true
-#      name: cloud-dev

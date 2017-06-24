@@ -1,0 +1,11 @@
+{
+  "datacenter" : "west-aws",
+  "data_dir" : "/tmp/consul",
+  "log_level" : "INFO",
+  "disable_host_node_id": true,
+  "addresses" : {
+    "http" : "0.0.0.0"
+  },
+  "retry_join" : [ "consul1" ],
+  "node_name" : "masterthree"
+}
