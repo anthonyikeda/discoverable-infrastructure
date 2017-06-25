@@ -1,17 +1,19 @@
 version: "3.2"
 services:
   consul1:
-    image: anthonyikeda/consul:0.8.4
+    image: consul:0.8.4
     volumes:
       - ./server1:/config
-      - consul-store:/discovery/data
+      - consul-store:/consul/data
+    networks:
+      - big-net
     ports:
       - 8301:8301
       - 8300:8300
       - 8500:8500
       - 8400:8400
       - 8600:8600
-    command: agent -disable-host-node-id -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}' --data-dir=/discovery/data
+    command: agent -bootstrap -node-id=fc57c68b-e51a-4287-b142-c361abed9e85 -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}' --data-dir=/consul/data
     external_links:
       - consul2
       - consul3
@@ -19,7 +21,11 @@ services:
     image: consul:0.8.4
     volumes:
       - ./server2:/config
-    command: agent -config-dir=/config -node-id=adf4238a-882b-9ddc-4a9d-5b6758e4159e -bind='{{ GetInterfaceIP "eth0" }}'
+      - consul-store:/consul/data
+      - consul-raft:/discovery
+    networks:
+      - big-net
+    command: agent -node-id=adf4238a-882b-9ddc-4a9d-5b6758e4159e -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}'
     depends_on:
       - consul1
     external_links:
@@ -28,7 +34,10 @@ services:
     image: consul:0.8.4
     volumes:
       - ./server3:/config
-    command: agent -config-dir=/config -node-id=c4b4b5a1-d366-4da2-bd8b-55f8f6341449 -bind='{{ GetInterfaceIP "eth0" }}'
+      - consul-store:/consul/data
+    networks:
+      - big-net
+    command: agent -node-id=c4b4b5a1-d366-4da2-bd8b-55f8f6341449 -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}'
     depends_on:
       - consul1
     external_links:
@@ -38,6 +47,8 @@ services:
     hostname: vault1
     volumes:
       - ./vault_config:/config
+    networks:
+      - big-net
     ports:
       - 8200:8200
     command: "server -config=/config/config.hcl"
@@ -46,6 +57,8 @@ services:
 
 volumes:
   consul-store:
+    driver: local
+  consul-raft:
     driver: local
 networks:
   big-net:
