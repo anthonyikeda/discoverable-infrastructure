@@ -14,9 +14,6 @@ services:
       - 8400:8400
       - 8600:8600
     command: agent -bootstrap -node-id=fc57c68b-e51a-4287-b142-c361abed9e85 -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}' --data-dir=/consul/data
-    external_links:
-      - consul2
-      - consul3
   consul2:
     image: consul:0.8.4
     volumes:
@@ -26,10 +23,6 @@ services:
     networks:
       - big-net
     command: agent -node-id=adf4238a-882b-9ddc-4a9d-5b6758e4159e -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}'
-    depends_on:
-      - consul1
-    external_links:
-      - consul1
   consul3:
     image: consul:0.8.4
     volumes:
@@ -38,10 +31,6 @@ services:
     networks:
       - big-net
     command: agent -node-id=c4b4b5a1-d366-4da2-bd8b-55f8f6341449 -config-dir=/config -bind='{{ GetInterfaceIP "eth0" }}'
-    depends_on:
-      - consul1
-    external_links:
-      - consul1
   vault:
     image: vault:0.7.2
     hostname: vault1
@@ -52,8 +41,6 @@ services:
     ports:
       - 8200:8200
     command: "server -config=/config/config.hcl"
-    depends_on:
-      - consul1
 
 volumes:
   consul-store:
