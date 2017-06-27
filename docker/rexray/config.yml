@@ -1,0 +1,6 @@
+libstorage:
+  service: virtualbox
+virtualbox:
+  endpoint: http://10.180.43.151:18083
+  volumePath: /Users/anthonyikeda/VirtualBox/Volumes
+  controllerName: SATA
