@@ -1,0 +1,17 @@
+version: "3.2"
+services:
+  main:
+    image: anthonyikeda/jenkins:1.0.0
+    ports:
+      - 9090:8080
+      - 50000:50000
+    secrets:
+      - jenkins-user
+      - jenkins-pass
+
+secrets:
+  jenkins-user:
+    external: true
+  jenkins-pass:
+    external: true
+
