@@ -8,6 +8,8 @@ services:
     secrets:
       - jenkins-user
       - jenkins-pass
+    networks:
+      - demo-network
 
 secrets:
   jenkins-user:
@@ -15,3 +17,6 @@ secrets:
   jenkins-pass:
     external: true
 
+networks:
+  demo-network:
+    external: true
